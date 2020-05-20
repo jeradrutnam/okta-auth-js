@@ -10,6 +10,11 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
+
+/**
+ * @typedef {OktaAuth.OAuthParams} OAuthParams
+ */
+
 /* global window, document, btoa */
 /* eslint-disable complexity, max-statements */
 var http          = require('./http');
@@ -102,7 +107,7 @@ function verifyToken(sdk, token, validationParams) {
       if (!valid) {
         throw new AuthSdkError('The token signature is not valid');
       }
-      if (validationParams.accessToken && token.claims.at_hash) {
+      if (validationParams && validationParams.accessToken && token.claims.at_hash) {
         return sdkCrypto.getOidcHash(validationParams.accessToken)
           .then(hash => {
             if (hash !== token.claims.at_hash) {
@@ -314,7 +319,10 @@ function handleOAuthResponse(sdk, oauthParams, res, urls) {
     };
   });
 }
-
+/**
+ * @param {OktaAuth} sdk
+ * @returns {OAuthParams}
+ */
 function getDefaultOAuthParams(sdk) {
   return {
     pkce: sdk.options.pkce,
